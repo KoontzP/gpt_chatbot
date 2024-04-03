@@ -69,7 +69,7 @@ dropout = 0.2
 
 
 chars = ""
-with open("data/vocab.txt", 'r', encoding='utf-8') as f:
+with open("vocab.txt", 'r', encoding='utf-8') as f:
         text = f.read()
         chars = sorted(list(set(text)))
 
