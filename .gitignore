@@ -4,3 +4,6 @@ val_split.txt
 data
 cuda
 data_extract.ipynb
+_pycache_
+.ipynb_checkpoints
+.idea
