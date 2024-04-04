@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>GPT Chatbot</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Arimo' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Hind:300' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div class="chatbot">
+    <h1>Chatbot</h1>
+    <form action="{{ url_for('home')}}" method="post">
+      <input type="text" name="prompt" placeholder="Type your message here..." required="required" />
+      <button type="submit">Send</button>
+    </form>
+    <div class="chat">
+      {% if prompt %}
+      <div class="user">
+        <span>{{ prompt }}</span>
+      </div>
+      {% endif %}
+      {% if response %}
+      <div class="bot">
+        <span>{{ response }}</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</body>
+</html>
