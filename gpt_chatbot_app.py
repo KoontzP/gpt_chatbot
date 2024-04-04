@@ -19,14 +19,7 @@ from flask import Flask, request, jsonify, render_template
 # In[ ]:
 
 
-parser = argparse.ArgumentParser(description='This is a demonstration program') 
 
-# Here we add an argument to the parser, specifying the expected type, a help message, etc.
-parser.add_argument('-batch_size', type=str, required=True, help='Please provide a batch_size')
-args = parser.parse_args()
-
-# Now we can use the argument value in our program.
-print(f'batch size: {args.batch_size}')
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(device)
@@ -41,9 +34,7 @@ print(device)
 # batch size is how many blocks in paralell
 
 block_size = 128
-# to use the batch_size cmd arg -> python file_name.py -batch_size 32
-batch_size = int(args.batch_size)
-# batch_size = 128
+batch_size = 128
 
 learning_rate = 5e-5
 
@@ -285,11 +276,39 @@ m = model.to(device)
 # In[ ]:
 
 
-# chatbot interface
-while True:
-    prompt = input("Prompt:\n")
+def generateOutput(prompt):
     context = torch.tensor(encode(prompt), dtype=torch.long, device=device)
     generated_chars = decode(m.generate(context.unsqueeze(0), max_new_tokens=150)[0].tolist())
-    print(f'Chatbot:\n{generated_chars}')
+    return generated_chars
 
 
+app = Flask(__name__)
+
+conversation = []  # List to hold conversation messages
+
+@app.route("/", methods=["GET", "POST"])
+def chat():
+    if request.method == "POST":
+        prompt = request.form.get("prompt")
+        if prompt:
+            conversation.append(prompt)  # Add the user's prompt to the conversation
+            # Generate the chatbot's response based on the user's prompt
+            generated_text = generateOutput(prompt)
+            conversation.append(generated_text)  # Add the chatbot's response to the conversation
+        # Render the template with the conversation and the latest prompt
+        return render_template("index.html", conversation=conversation, prompt=prompt)
+
+    # Render the template initially with an empty conversation and no prompt
+    return render_template("index.html", conversation=[], prompt="")
+
+
+
+
+# Define a route to render the form
+@app.route("/", methods=["GET"])
+def home():
+    return render_template("index.html")
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
