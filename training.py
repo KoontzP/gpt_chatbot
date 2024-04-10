@@ -56,10 +56,10 @@ learning_rate = 5e-5
 n_embd = 384 
 
 # number of decoder blocks in transformer architecture
-n_layer = 8
+n_layer = 16
 
 # how many features each head captures in paralell
-n_head = 8
+n_head = 16
 
 # defining neurons to discard, 20%
 dropout = 0.2 
@@ -70,10 +70,12 @@ dropout = 0.2
 
 chars = ""
 with open("vocab.txt", 'r', encoding='utf-8') as f:
-        text = f.read()
-        chars = sorted(list(set(text)))
+    text = f.read()
+
+
 
 # size of different tokens to use
+chars = sorted(list(set(text)))
 vocab_size = len(chars)
 
 
@@ -335,10 +337,10 @@ class GPTLanguageModel(nn.Module):
 model = GPTLanguageModel(vocab_size)
 
 # loading in a pre-trained models parameters
-# print('loading model parameters...')
-# with open('model-01.pkl', 'rb') as f:
-#    model = pickle.load(f)
-# print('loaded successfully')
+print('loading model parameters...')
+with open('model-01.pkl', 'rb') as f:
+    model = pickle.load(f)
+print('loaded successfully')
 
 # pushing parameters to GPU for faster training
 m = model.to(device)
@@ -380,7 +382,7 @@ print(f'loss: {loss.item()}')
 
 with open('model-01.pkl', 'wb') as f:
     pickle.dump(model, f)
-print(f'saved model as model-01.pkl') 
+print(f'saved model as model-01.pkl')
 
 
 # In[ ]:
